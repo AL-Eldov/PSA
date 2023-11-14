@@ -1,4 +1,6 @@
-﻿namespace path_to_space_app;
+﻿using System.Text;
+
+namespace path_to_space_app;
 
 internal static class Tasks
 {
@@ -110,12 +112,112 @@ internal static class Tasks
         };
         Console.WriteLine(massage);
     }
-    public static void PerformTask2012() { }
-    public static void PerformTask2013() { }
-    public static void PerformTask2014() { }
-    public static void PerformTask2015() { }
-    public static void PerformTask2016() { }
-    public static void PerformTask2017() { }
+    public static void PerformTask2012()//Разрезание квадрата
+    {
+        int[] reactangle1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] reactangle2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        string answer = "NO";
+        if (reactangle1.Contains(reactangle2.Max()) && reactangle1.Min() + reactangle2.Min() == reactangle2.Max())
+        {
+            answer = "YES";
+        }
+        Console.WriteLine(answer);
+    }
+    public static void PerformTask2013()//Количество минимумов 
+    {
+        Console.ReadLine();//не нужно, но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        Console.WriteLine(numbers.Count(n => n == numbers.Min()));
+    }
+    public static void PerformTask2014()//Алгоритм Евклида
+    {
+        PerformTask2010();
+    }
+    public static void PerformTask2015()//Простые на отрезке 
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        for (int i = 1; i <= n; i++)
+        {
+            if (IsPrime(i)) { Console.WriteLine(i); }
+        }
+    }
+    private static bool IsPrime(int n)
+    {
+        for (int i = 2; i < (int)Math.Sqrt(n) + 1; i++)
+        {
+            if (n % i == 0)
+            {
+                return false;
+            }
+        }
+        return n == 1 ? false : true;
+    }
+    public static void PerformTask2016()//Количество корней уравнения
+    {
+        int[] coefficients = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int discriminant = (int)Math.Pow(coefficients[1], 2) - 4 * coefficients[0] * coefficients[2];
+        int answer = (coefficients[0], coefficients[1], coefficients[2]) switch
+        {
+            (0, 0, 0) => -1,
+            (0, 0, _) => 0,
+            (0, _, _) => 1,
+            _ => discriminant < 0 ? 0 : discriminant == 0 ? 1 : 1
+        };
+        Console.WriteLine(answer);
+    }
+    public static void PerformTask2017()//Числа с наибольшим количеством делителей
+    {
+        int[] border = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = GetRangeArray(border[0], border[1]);
+        int[] numbersDivider = GetNumberDividerArray(numbers);
+        int numberMaxDivider = numbersDivider.Count(n => n == numbersDivider.Max());
+        Console.WriteLine(numberMaxDivider);
+
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            Console.WriteLine(numbers[i]) ;
+        }
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            Console.WriteLine(numbersDivider[i]);
+        }
+
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            if (numbersDivider[i] == numbersDivider.Max())
+                sb.Append(numbers[i] + ",");
+        }
+        Console.WriteLine(sb.Remove(sb.Length - 1, 1).ToString());
+    }
+    private static int[] GetRangeArray(int a, int b)
+    {
+        int[] numbers = new int[b - a + 1];
+        for (int i = 0; i < numbers.Length; i++, a++)
+        {
+            numbers[i] = a;
+        }
+        return numbers;
+    }
+    private static int FindNumberDivider(int n)
+    {
+        int dividerCounter = 0;
+        for (int i = 2; i < (int)Math.Sqrt(n) + 1; i++)
+        {
+            dividerCounter = n % i == 0 ? dividerCounter+1 : dividerCounter;
+        }
+        return dividerCounter;
+    }
+    private static int[] GetNumberDividerArray(int[] startArray)
+    {
+        int[] countdividerArray = new int[startArray.Length];
+        for (int i = 0; i < countdividerArray.Length; i++)
+        {
+            countdividerArray[i] = FindNumberDivider(startArray[i]);
+        }
+        return countdividerArray;
+    }
     public static void PerformTask2018() { }
     public static void PerformTask2019() { }
     public static void PerformTask2020() { }
