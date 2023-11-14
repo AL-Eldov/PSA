@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace path_to_space_app;
 
@@ -172,17 +173,6 @@ internal static class Tasks
         int[] numbersDivider = GetNumberDividerArray(numbers);
         int numberMaxDivider = numbersDivider.Count(n => n == numbersDivider.Max());
         Console.WriteLine(numberMaxDivider);
-
-        for (int i = 0; i < numbers.Length; i++)
-        {
-            Console.WriteLine(numbers[i]) ;
-        }
-        for (int i = 0; i < numbers.Length; i++)
-        {
-            Console.WriteLine(numbersDivider[i]);
-        }
-
-
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numbers.Length; i++)
         {
@@ -203,9 +193,9 @@ internal static class Tasks
     private static int FindNumberDivider(int n)
     {
         int dividerCounter = 0;
-        for (int i = 2; i < (int)Math.Sqrt(n) + 1; i++)
+        for (int i = 2; i < n; i++)
         {
-            dividerCounter = n % i == 0 ? dividerCounter+1 : dividerCounter;
+            dividerCounter = n % i == 0 ? dividerCounter + 1 : dividerCounter;
         }
         return dividerCounter;
     }
@@ -218,7 +208,53 @@ internal static class Tasks
         }
         return countdividerArray;
     }
-    public static void PerformTask2018() { }
-    public static void PerformTask2019() { }
-    public static void PerformTask2020() { }
+    public static void PerformTask2018()//Хитрая сумма чисел
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] signArray = GetSignArray(numbers, n);
+        int resultSum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            resultSum += signArray[i] * numbers[i];
+        }
+        Console.WriteLine(resultSum);
+    }
+    private static int[] GetSignArray(int[] startArray, int n)
+    {
+        int[] signArray = new int[n];
+        int blocCounter = 1;
+        int negativeObserver = 1;
+        for (int i = 0; i < n;)
+        {
+            for (int j = 0; j < blocCounter && i < n; j++, i++)
+            {
+                signArray[i] = negativeObserver;
+            }
+            blocCounter++;
+            negativeObserver *= -1;
+        }
+        return signArray;
+    }
+    public static void PerformTask2019()//Треугольная полка
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int shelfNumber = 0;
+        int bookOnShelf = 1;
+        int numberAllBook = 0;
+        while (numberAllBook < n)
+        {
+            numberAllBook += bookOnShelf++;
+            shelfNumber++;
+        }
+        Console.WriteLine(shelfNumber);
+    }
+    public static void PerformTask2020()
+    {
+        Console.ReadLine();//не нужно, но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        var toDictionary = numbers.GroupBy(n => n).Select(g => new { key = g.Key, val = g.Count() });
+        var answer = toDictionary.FirstOrDefault(n => n.val == toDictionary.Max(n => n.val));
+        Console.WriteLine($"{answer?.key} {answer?.val}");
+    }
 }
