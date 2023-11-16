@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace path_to_space_app;
 
@@ -249,7 +248,7 @@ internal static class Tasks
         }
         Console.WriteLine(shelfNumber);
     }
-    public static void PerformTask2020()
+    public static void PerformTask2020()//Наиболее частое значение
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
         int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
@@ -257,4 +256,55 @@ internal static class Tasks
         var answer = toDictionary.FirstOrDefault(n => n.val == toDictionary.Max(n => n.val));
         Console.WriteLine($"{answer?.key} {answer?.val}");
     }
+    public static void PerformTask2021()//Делим максимум
+    {
+        Console.ReadLine();//не нужно, но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        numbers = numbers.Select(n => n == numbers.Max() ? (int)n / 2 : n).ToArray();
+        numbers = numbers.Select(n => n == numbers.Max() ? (int)n / 2 : n).ToArray();
+        foreach (var number in numbers)
+        {
+            Console.Write(number + " ");
+        }
+    }
+    public static void PerformTask2022()//Делящиеся пары
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        Array.Sort(numbers);
+        int counter = 0;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i + 1; j < n; j++)
+            {
+                counter = numbers[j] % numbers[i] == 0 ? counter + 1 : counter;
+            }
+        }
+        Console.WriteLine(counter);
+    }
+    public static void PerformTask2023()//Поиск во втором массиве............................................................................................
+    {
+        Console.ReadLine();//не нужно, но в задаче должно быть
+        int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        Console.ReadLine();//не нужно, но в задаче должно быть
+        int[] numbers2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] resultArray = numbers1.Intersect(numbers2).ToArray();
+        Console.WriteLine(resultArray.Length);
+        foreach (var number in resultArray)
+        {
+            Console.Write(number + " ");
+        }
+    }
+    public static void PerformTask2024() { }
+    public static void PerformTask2025() { }
+    public static void PerformTask2026() { }
+    public static void PerformTask2027() { }
+    public static void PerformTask2028() { }
+    public static void PerformTask2029() { }
+    public static void PerformTask2030() { }
+    public static void PerformTask2031() { }
+    public static void PerformTask2032() { }
+    public static void PerformTask2033() { }
+    public static void PerformTask2034() { }
+    public static void PerformTask2035() { }
 }

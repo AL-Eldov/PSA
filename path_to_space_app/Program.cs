@@ -1,3 +1,20 @@
-﻿using path_to_space_app;
+﻿using System;
+using System.IO;
 
-Tasks.PerformTask2020();
+class Solution
+{
+    static void Main()
+    {
+        using (StreamReader reader = new StreamReader("input.txt"))
+        {
+            string[] numbers = reader.ReadLine().Split();
+            using (StreamWriter writer = new StreamWriter("output.txt", false))
+            {
+                string text = (int.Parse(numbers[0]) + int.Parse(numbers[1])).ToString();
+                writer.Write(text);
+            }
+        }
+    }
+}
+
+
