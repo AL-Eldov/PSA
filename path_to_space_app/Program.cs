@@ -1,20 +1,13 @@
 ﻿using System;
-using System.IO;
+using System.Threading;
+using System.Linq;
 
 class Solution
 {
     static void Main()
     {
-        using (StreamReader reader = new StreamReader("input.txt"))
-        {
-            string[] numbers = reader.ReadLine().Split();
-            using (StreamWriter writer = new StreamWriter("output.txt", false))
-            {
-                string text = (int.Parse(numbers[0]) + int.Parse(numbers[1])).ToString();
-                writer.Write(text);
-            }
-        }
+
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        Console.WriteLine(numbers.Sum());
     }
 }
-
-
