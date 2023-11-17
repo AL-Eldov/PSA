@@ -12,3 +12,4 @@ D:\LearningPath\Programming\C#\path_to_space_app\path_to_space_app\obj\Debug\net
 D:\LearningPath\Programming\C#\path_to_space_app\path_to_space_app\obj\Debug\net7.0\path_to_space_app.pdb
 D:\LearningPath\Programming\C#\path_to_space_app\path_to_space_app\obj\Debug\net7.0\path_to_space_app.genruntimeconfig.cache
 D:\LearningPath\Programming\C#\path_to_space_app\path_to_space_app\obj\Debug\net7.0\ref\path_to_space_app.dll
+D:\LearningPath\Programming\C#\path_to_space_app\path_to_space_app\obj\Debug\net7.0\path_to_space_app.sourcelink.json

@@ -1,13 +1,16 @@
-﻿using System;
-using System.Threading;
+﻿using path_to_space_app;
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 class Solution
 {
     static void Main()
     {
 
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        Console.WriteLine(numbers.Sum());
+        Tasks.PerformTask2023();
     }
 }

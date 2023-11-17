@@ -2,24 +2,25 @@
 
 namespace path_to_space_app;
 
-internal static class Tasks
+internal static class Tasks//что бы скормить задания сайту нужно убрать элементы nullable контекста( ?. и !)
+                           //и убрать форматирование строк типо $"{numberLoads} {loadWeight}" заменив на numberLoads +" " + loadWeight
 {
     static public void PerformTask2001()//A+B
     {
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         Console.WriteLine(numbers.Sum());
     }
     static public void PerformTask2002()//Сумма чисел
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         Console.WriteLine(numbers.Sum());
     }
     static public void PerformTask2003()//Альтернированная сумма чисел
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
         int negativator = 0;
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s) * (int)Math.Pow(-1, negativator++));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s) * (int)Math.Pow(-1, negativator++)));
         Console.WriteLine(numbers.Sum());
     }
     static public void PerformTask2004()//Високосный год
@@ -30,7 +31,7 @@ internal static class Tasks
     static public void PerformTask2005()//Индекс первого минимума
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         Console.WriteLine(Array.IndexOf(numbers, numbers.Min()) + 1);
     }
     static public void PerformTask2006()//Измерение длин в Бадене
@@ -57,13 +58,13 @@ internal static class Tasks
     }
     static public void PerformTask2008()//Загрузка грузовика
     {
-        int maxWeight = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s))[1];
-        int[] cargoWeights = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int maxWeight = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)))[1];
+        int[] cargoWeights = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int numberLoads = 0;
         int loadWeight = 0;
         foreach (int weight in cargoWeights)
         {
-            if (maxWeight > loadWeight + weight)
+            if (maxWeight >= loadWeight + weight)
             {
                 numberLoads++;
                 loadWeight += weight;
@@ -74,9 +75,9 @@ internal static class Tasks
     public static void PerformTask2009()//Сумма на степенях двоек
     {
         int arrayLength = Convert.ToInt32(Console.ReadLine());
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int resultSum = 0;
-        for (int i = 1, j = 1; i < arrayLength; i = (int)Math.Pow(2, j++))
+        for (int i = 1, j = 1; i <= arrayLength; i = (int)Math.Pow(2, j++))
         {
             resultSum += numbers[i - 1];
         }
@@ -84,7 +85,7 @@ internal static class Tasks
     }
     public static void PerformTask2010()//Алгоритм Евклида 
     {
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int stepCounter = 0;
         while (Array.TrueForAll(numbers, n => n > 0))
         {
@@ -101,6 +102,7 @@ internal static class Tasks
         Console.WriteLine($"{stepCounter} {numbers.Max()}");
     }
     public static void PerformTask2011()//Анализ возраста
+                                        //что бы скормить задание сайту нужно переписать switch в цепочку if
     {
         int age = Convert.ToInt32(Console.ReadLine());
         string massage = age switch
@@ -114,8 +116,8 @@ internal static class Tasks
     }
     public static void PerformTask2012()//Разрезание квадрата
     {
-        int[] reactangle1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        int[] reactangle2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] reactangle1 = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        int[] reactangle2 = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         string answer = "NO";
         if (reactangle1.Contains(reactangle2.Max()) && reactangle1.Min() + reactangle2.Min() == reactangle2.Max())
         {
@@ -126,12 +128,12 @@ internal static class Tasks
     public static void PerformTask2013()//Количество минимумов 
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        Console.WriteLine(numbers.Count(n => n == numbers.Min()));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        Console.WriteLine(numbers.Count((n) => (n == numbers.Min())));
     }
     public static void PerformTask2014()//Алгоритм Евклида
     {
-        PerformTask2010();
+        // не понятно
     }
     public static void PerformTask2015()//Простые на отрезке 
     {
@@ -153,24 +155,26 @@ internal static class Tasks
         return n == 1 ? false : true;
     }
     public static void PerformTask2016()//Количество корней уравнения
+                                        //что бы скормить задание сайту нужно переписать switch в цепочку if
     {
-        int[] coefficients = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] coefficients = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int discriminant = (int)Math.Pow(coefficients[1], 2) - 4 * coefficients[0] * coefficients[2];
         int answer = (coefficients[0], coefficients[1], coefficients[2]) switch
         {
             (0, 0, 0) => -1,
             (0, 0, _) => 0,
+            (0, _, 0) => 1,
             (0, _, _) => 1,
-            _ => discriminant < 0 ? 0 : discriminant == 0 ? 1 : 1
+            _ => discriminant < 0 ? 0 : discriminant == 0 ? 1 : 2
         };
         Console.WriteLine(answer);
     }
     public static void PerformTask2017()//Числа с наибольшим количеством делителей
     {
-        int[] border = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] border = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int[] numbers = GetRangeArray(border[0], border[1]);
         int[] numbersDivider = GetNumberDividerArray(numbers);
-        int numberMaxDivider = numbersDivider.Count(n => n == numbersDivider.Max());
+        int numberMaxDivider = numbersDivider.Count((n) => (n == numbersDivider.Max()));
         Console.WriteLine(numberMaxDivider);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numbers.Length; i++)
@@ -192,7 +196,7 @@ internal static class Tasks
     private static int FindNumberDivider(int n)
     {
         int dividerCounter = 0;
-        for (int i = 2; i < n; i++)
+        for (int i = 1; i <= n; i++)
         {
             dividerCounter = n % i == 0 ? dividerCounter + 1 : dividerCounter;
         }
@@ -210,7 +214,7 @@ internal static class Tasks
     public static void PerformTask2018()//Хитрая сумма чисел
     {
         int n = Convert.ToInt32(Console.ReadLine());
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         int[] signArray = GetSignArray(numbers, n);
         int resultSum = 0;
         for (int i = 0; i < n; i++)
@@ -251,17 +255,18 @@ internal static class Tasks
     public static void PerformTask2020()//Наиболее частое значение
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        var toDictionary = numbers.GroupBy(n => n).Select(g => new { key = g.Key, val = g.Count() });
-        var answer = toDictionary.FirstOrDefault(n => n.val == toDictionary.Max(n => n.val));
-        Console.WriteLine($"{answer?.key} {answer?.val}");
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        var toDictionary = numbers.GroupBy((n) => (n)).Select((g) => (new { key = g.Key, val = g.Count() })).ToDictionary((c) => (c.key), (c) => (c.val));
+        int maxNumberInclusions = toDictionary.Values.Max();
+        var answer = toDictionary.Where((n) => (n.Value == maxNumberInclusions)).ToDictionary((c) => (c.Key), (c) => (c.Value)).Keys.Min();
+        Console.WriteLine($"{answer} {maxNumberInclusions}");
     }
     public static void PerformTask2021()//Делим максимум
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
         int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        numbers = numbers.Select(n => n == numbers.Max() ? (int)n / 2 : n).ToArray();
-        numbers = numbers.Select(n => n == numbers.Max() ? (int)n / 2 : n).ToArray();
+        numbers = numbers.Select((n) => (n == numbers.Max() ? (int)n / 2 : n)).ToArray();
+        numbers = numbers.Select((n) => (n == numbers.Max() ? (int)n / 2 : n)).ToArray();
         foreach (var number in numbers)
         {
             Console.Write(number + " ");
@@ -270,32 +275,78 @@ internal static class Tasks
     public static void PerformTask2022()//Делящиеся пары
     {
         int n = Convert.ToInt32(Console.ReadLine());
-        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
         Array.Sort(numbers);
         int counter = 0;
         for (int i = 0; i < n; i++)
         {
-            for (int j = i + 1; j < n; j++)
+            for (int j = 0; j < n; j++)
             {
-                counter = numbers[j] % numbers[i] == 0 ? counter + 1 : counter;
+                if (i != j) { counter = numbers[j] % numbers[i] == 0 ? counter + 1 : counter; }
             }
         }
         Console.WriteLine(counter);
     }
-    public static void PerformTask2023()//Поиск во втором массиве............................................................................................
+    public static void PerformTask2023()//Поиск во втором массиве//----------------не проходит все тесты и я хрен знает почему
     {
-        Console.ReadLine();//не нужно, но в задаче должно быть
+        int n1 = Convert.ToInt32(Console.ReadLine());
         int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        Console.ReadLine();//не нужно, но в задаче должно быть
+        int n2 = Convert.ToInt32(Console.ReadLine());
         int[] numbers2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        int[] resultArray = numbers1.Intersect(numbers2).ToArray();
-        Console.WriteLine(resultArray.Length);
+        Dictionary<int, int> reapeats = new Dictionary<int, int>();
+        int[] resultArray = new int[n1];
+        for (int i = 0, j = 0; i < n1; i++)
+        {
+            if (numbers2.Contains(numbers1[i]))
+            {
+                if (!reapeats.ContainsKey(numbers1[i]))
+                {
+                    reapeats.Add(numbers1[i], 1);
+                    resultArray[j] = numbers1[i];
+                    j++;
+                }
+                else
+                {
+                    if (numbers2.Count((n) => (n == numbers1[i])) > reapeats[numbers1[i]])
+                    {
+                        reapeats[numbers1[i]] += 1;
+                        resultArray[j] = numbers1[i];
+                        j++;
+                    }
+                }
+            }
+        }
+        Console.WriteLine(resultArray.Count((n) => (n != 0)));
         foreach (var number in resultArray)
         {
-            Console.Write(number + " ");
+            if (number != 0) Console.Write(number + " ");
         }
     }
-    public static void PerformTask2024() { }
+    public static void PerformTask2024()//Сделать палиндром
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int answer = 0;
+        if (n % 2 == 0)
+        {
+            int[] nums1 = numbers.Take(n / 2).ToArray();
+            int[] nums2 = numbers.Skip((n / 2)).Reverse().ToArray();
+            for (int i = 0; i < n / 2; i++)
+            {
+                if (nums1[i] != nums2[i]) answer++;
+            }
+        }
+        else
+        {
+            int[] nums1 = numbers.Take(n / 2).ToArray();
+            int[] nums2 = numbers.Skip(n / 2 + 1).Reverse().ToArray();
+            for (int i = 0; i < n / 2; i++)
+            {
+                if (nums1[i] != nums2[i]) answer++;
+            }
+        }
+        Console.WriteLine(answer);
+    }
     public static void PerformTask2025() { }
     public static void PerformTask2026() { }
     public static void PerformTask2027() { }
