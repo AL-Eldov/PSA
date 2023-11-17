@@ -287,7 +287,7 @@ internal static class Tasks//что бы скормить задания сай�
         }
         Console.WriteLine(counter);
     }
-    public static void PerformTask2023()//Поиск во втором массиве//----------------не проходит все тесты и я хрен знает почему
+    public static void PerformTask2023()//Поиск во втором массиве//---------------- проходит не все тесты и я хрен знает почему
     {
         int n1 = Convert.ToInt32(Console.ReadLine());
         int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
