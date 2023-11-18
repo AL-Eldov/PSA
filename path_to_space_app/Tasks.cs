@@ -133,14 +133,33 @@ internal static class Tasks//что бы скормить задания сай�
     }
     public static void PerformTask2014()//Алгоритм Евклида
     {
-        // не понятно
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        int stepCounter = 0;
+        int part = 0;
+        while (Array.TrueForAll(numbers, n => n > 0))
+        {
+            if (numbers[0] > numbers[1])
+            {
+                part = numbers[0] / numbers[1];
+                numbers[0] -= numbers[1] * part;
+                stepCounter += part;
+            }
+            else
+            {
+                part = numbers[1] / numbers[0];
+                numbers[1] -= numbers[0] * part;
+                stepCounter += part;
+            }
+        }
+        Console.WriteLine($"{stepCounter} {numbers.Max()}");
     }
     public static void PerformTask2015()//Простые на отрезке 
     {
         int n = Convert.ToInt32(Console.ReadLine());
         for (int i = 1; i <= n; i++)
         {
-            if (IsPrime(i)) { Console.WriteLine(i); }
+            if (IsPrime(i))
+                Console.WriteLine(i);
         }
     }
     private static bool IsPrime(int n)
@@ -256,7 +275,7 @@ internal static class Tasks//что бы скормить задания сай�
     {
         Console.ReadLine();//не нужно, но в задаче должно быть
         int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
-        var toDictionary = numbers.GroupBy((n) => (n)).Select((g) => (new { key = g.Key, val = g.Count() })).ToDictionary((c) => (c.key), (c) => (c.val));
+        var toDictionary = numbers.GroupBy((n) => (n)).ToDictionary((c) => (c.Key), (c) => (c.Count()));
         int maxNumberInclusions = toDictionary.Values.Max();
         var answer = toDictionary.Where((n) => (n.Value == maxNumberInclusions)).ToDictionary((c) => (c.Key), (c) => (c.Value)).Keys.Min();
         Console.WriteLine($"{answer} {maxNumberInclusions}");
@@ -282,12 +301,13 @@ internal static class Tasks//что бы скормить задания сай�
         {
             for (int j = 0; j < n; j++)
             {
-                if (i != j) { counter = numbers[j] % numbers[i] == 0 ? counter + 1 : counter; }
+                if (i != j)
+                    counter = numbers[j] % numbers[i] == 0 ? counter + 1 : counter;
             }
         }
         Console.WriteLine(counter);
     }
-    public static void PerformTask2023()//Поиск во втором массиве//----------------не проходит все тесты и я хрен знает почему
+    public static void PerformTask2023()//Поиск во втором массиве//---------------- проходит не все тесты и я хрен знает почему
     {
         int n1 = Convert.ToInt32(Console.ReadLine());
         int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
@@ -305,14 +325,12 @@ internal static class Tasks//что бы скормить задания сай�
                     resultArray[j] = numbers1[i];
                     j++;
                 }
-                else
+                else if (numbers2.Count((n) => (n == numbers1[i])) > reapeats[numbers1[i]])
                 {
-                    if (numbers2.Count((n) => (n == numbers1[i])) > reapeats[numbers1[i]])
-                    {
-                        reapeats[numbers1[i]] += 1;
-                        resultArray[j] = numbers1[i];
-                        j++;
-                    }
+                    reapeats[numbers1[i]] += 1;
+                    resultArray[j] = numbers1[i];
+                    j++;
+
                 }
             }
         }
@@ -333,7 +351,8 @@ internal static class Tasks//что бы скормить задания сай�
             int[] nums2 = numbers.Skip((n / 2)).Reverse().ToArray();
             for (int i = 0; i < n / 2; i++)
             {
-                if (nums1[i] != nums2[i]) answer++;
+                if (nums1[i] != nums2[i])
+                    answer++;
             }
         }
         else
@@ -342,20 +361,221 @@ internal static class Tasks//что бы скормить задания сай�
             int[] nums2 = numbers.Skip(n / 2 + 1).Reverse().ToArray();
             for (int i = 0; i < n / 2; i++)
             {
-                if (nums1[i] != nums2[i]) answer++;
+                if (nums1[i] != nums2[i])
+                    answer++;
             }
         }
         Console.WriteLine(answer);
     }
-    public static void PerformTask2025() { }
-    public static void PerformTask2026() { }
-    public static void PerformTask2027() { }
-    public static void PerformTask2028() { }
-    public static void PerformTask2029() { }
-    public static void PerformTask2030() { }
-    public static void PerformTask2031() { }
-    public static void PerformTask2032() { }
-    public static void PerformTask2033() { }
-    public static void PerformTask2034() { }
-    public static void PerformTask2035() { }
+    public static void PerformTask2025()//Запросы минимума на подмассиве
+    {
+        int n = Convert.ToInt32(Console.ReadLine());//не понадобилось но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int m = Convert.ToInt32(Console.ReadLine());
+        int[] resultArray = new int[m];
+        int[] twoNumbers = new int[2];
+        for (int i = 0; i < m; i++)
+        {
+            twoNumbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+            resultArray[i] = numbers.Skip(twoNumbers[0] - 1).Take(twoNumbers[1] - twoNumbers[0] + 1).Min();
+        }
+        for (int i = 0; i < m; i++)
+        {
+            Console.WriteLine(resultArray[i]);
+        }
+    }
+    public static void PerformTask2026()//Ближайший справа больший
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] resultArray = new int[n];
+        for (int i = 0; i < n; i++)
+        {
+            resultArray[i] = numbers.Skip(i).FirstOrDefault((s) => (s > numbers[i]), 0);
+        }
+        foreach (var number in resultArray)
+        {
+            Console.Write(number + " ");
+        }
+    }
+    public static void PerformTask2027()//Два переворота
+    {
+        int n = Convert.ToInt32(Console.ReadLine());//не понадобилось но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] twoNumbers = new int[2];
+        twoNumbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        MakeFlip(numbers, twoNumbers[0], twoNumbers[1]);
+        twoNumbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        MakeFlip(numbers, twoNumbers[0], twoNumbers[1]);
+        foreach (var number in numbers)
+        {
+            Console.Write(number + " ");
+        }
+    }
+    private static void MakeFlip(int[] startArray, int a, int b)
+    {
+        int tampVal = 0;
+        int centre = (b - a) == 1 ? a : (b - a) / 2 + a;
+        for (int i = a - 1, j = 0; i < centre; i++, j++)
+        {
+            tampVal = startArray[i];
+            startArray[i] = startArray[b - 1 - j];
+            startArray[b - 1 - j] = tampVal;
+        }
+    }
+    public static void PerformTask2028()//Числа 0-4
+    {
+        int n = Convert.ToInt32(Console.ReadLine());//не понадобилось но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        var toDictionary = numbers.GroupBy((num) => (num)).ToDictionary((c) => (c.Key), (c) => (c.Count())).OrderBy((d) => (d.Key));
+
+        foreach (var number in toDictionary)
+        {
+            Console.WriteLine($"{number.Key}  {number.Value}");
+        }
+    }
+    public static void PerformTask2029()//Средний минимум
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int minNumber = numbers.Min();
+        int countMinNumber = numbers.Count(x => x == minNumber);
+        int needSkipNumber = countMinNumber % 2 == 0 ? countMinNumber / 2 : countMinNumber / 2 + 1;
+        int i = 0;
+        for (; i < n && needSkipNumber > 0; i++)
+        {
+            if (numbers[i] == minNumber)
+                needSkipNumber--;
+        }
+        Console.WriteLine(i);
+    }
+    public static void PerformTask2030()//Подмассивы с нулевой суммой
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int pairNumberCounter = 0;
+        int tempSum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i; j < n; j++)
+            {
+                for (int k = i; k <= j; k++)
+                {
+                    tempSum += numbers[k];
+                }
+                if (tempSum == 0)
+                    pairNumberCounter++;
+                tempSum = 0;
+            }
+        }
+        Console.WriteLine(pairNumberCounter);
+    }
+    public static void PerformTask2031()//Антиуникальные числа
+    {
+        int n = Convert.ToInt32(Console.ReadLine());//не понадобилось но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] nonUniqueNumber = numbers.GroupBy((num) => (num)).Where((z) => (z.Count() >= 2)).Select((x) => (x.Key)).ToArray();
+        Array.Sort(nonUniqueNumber);
+        Console.WriteLine(nonUniqueNumber.Length);
+        foreach (var number in nonUniqueNumber)
+        {
+            Console.Write(number + " ");
+        }
+    }
+    public static void PerformTask2032()//Сравнение длинных чисел//---------------- проходит не все тесты и я хрен знает почему
+    {
+        int n1 = Convert.ToInt32(Console.ReadLine());
+        int[] number1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int n2 = Convert.ToInt32(Console.ReadLine());
+        int[] number2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int num1 = (int)number1.Select((n) => (n * Math.Pow(10, --n1))).ToArray().Sum();
+        int num2 = (int)number2.Select((n) => (n * Math.Pow(10, --n2))).ToArray().Sum();
+
+        Console.WriteLine(num1);
+        Console.WriteLine(num2);
+
+        int answer = num1 < num2 ? -1 : num1 == num2 ? 0 : 1;
+        Console.WriteLine(answer);
+    }
+    public static void PerformTask2033()//Прибавление единицы к длинному числу//---------------- проходит не все тесты и я хрен знает почему
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] number = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int num = (int)number.Select((x) => (x * Math.Pow(10, --n))).ToArray().Sum() + 1;
+        n = num.ToString().Length > (num - 1).ToString().Length ? number.Length + 1 : number.Length;
+        int[] resultArray = new int[n];
+        for (int i = 0; i < n; i++)
+        {
+            resultArray[n - 1 - i] = num % 10;
+            num /= 10;
+        }
+        Console.WriteLine(n);
+        foreach (var temp in resultArray.SkipWhile((x) => (x == 0)))
+        {
+            Console.Write(temp + " ");
+        }
+    }
+    public static void PerformTask2034()//Наидлиннейший почти константный подмассив
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] number = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int countMaxLenght = 0;
+        int a = 0;
+        int b = 0;
+        int tempLenghtL = 0;
+        int tempLenghtR = 0;
+        int tempLenght = 0;
+        for (int i = 0; i < n - countMaxLenght; ++i)//можно достаточно просто оптимизировать, но мне лень
+        {
+            var tempCollect = number.Skip(i);
+            tempLenghtL = tempCollect.TakeWhile((n) => (number[i] - n == -1 || number[i] - n == 0)).ToArray().Length;
+            tempLenghtR = tempCollect.TakeWhile((n) => (number[i] - n == 1 || number[i] - n == 0)).ToArray().Length;
+            tempLenght = tempLenghtL > tempLenghtR ? tempLenghtL : tempLenghtR;
+            if (tempLenght > countMaxLenght)
+            {
+                a = i + 1;
+                b = a + tempLenght - 1;
+                countMaxLenght = tempLenght;
+            }
+        }
+        Console.WriteLine($"{a} {b}");
+    }
+    public static void PerformTask2035()//Период массива//---------------- проходит не все тесты и я хрен знает почему
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        List<int> numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s)).ToList<int>();
+        int[] arrayDivider = GetNumberDivider(n);
+        int answer = 0;
+        List<int> tempShortArray = new List<int>();
+        List<int> tempLongtArray = new List<int>();
+        for (int i = 0; i < arrayDivider.Length; i++)
+        {
+            tempShortArray = numbers.GetRange(0,arrayDivider[i]);
+            int j = 0;
+            for (; j < n / arrayDivider[i]; j++)
+            {
+                 tempLongtArray.AddRange(tempShortArray);
+            }
+            if (tempLongtArray.SequenceEqual(numbers))
+            {
+                answer = arrayDivider[i];
+                break;
+            }
+            tempLongtArray = new List<int>();
+        }
+        Console.WriteLine(answer);
+    }
+    private static int[] GetNumberDivider(int n)
+    {
+        List<int>  resultArray = new List<int>() { 1};
+        for (int i = 2; i < Math.Sqrt(n) + 1; i++)
+        {
+            if (n % i == 0)
+            {
+                resultArray.Add(i);
+            }
+        }
+        resultArray.Add(n);
+        return resultArray.ToArray();
+    }
 }
