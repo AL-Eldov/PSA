@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace path_to_space_app;
 
@@ -550,11 +551,11 @@ internal static class Tasks//что бы скормить задания сай�
         List<int> tempLongtArray = new List<int>();
         for (int i = 0; i < arrayDivider.Length; i++)
         {
-            tempShortArray = numbers.GetRange(0,arrayDivider[i]);
+            tempShortArray = numbers.GetRange(0, arrayDivider[i]);
             int j = 0;
             for (; j < n / arrayDivider[i]; j++)
             {
-                 tempLongtArray.AddRange(tempShortArray);
+                tempLongtArray.AddRange(tempShortArray);
             }
             if (tempLongtArray.SequenceEqual(numbers))
             {
@@ -567,7 +568,7 @@ internal static class Tasks//что бы скормить задания сай�
     }
     private static int[] GetNumberDivider(int n)
     {
-        List<int>  resultArray = new List<int>() { 1};
+        List<int> resultArray = new List<int>() { 1 };
         for (int i = 2; i < Math.Sqrt(n) + 1; i++)
         {
             if (n % i == 0)
@@ -578,4 +579,104 @@ internal static class Tasks//что бы скормить задания сай�
         resultArray.Add(n);
         return resultArray.ToArray();
     }
+    public static void PerformTask2036()
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        string[] words = new string[n];
+        for (int i = 0; i < n; i++)
+        {
+            string tempString = Console.ReadLine()!;
+            if (ChekcWord(tempString))
+            {
+                words[i] = tempString;
+            }
+        }
+        foreach (string word in words)
+        {
+            if (word != null)
+                Console.WriteLine(word);
+        }
+    }
+    private static bool ChekcWord(string startString)
+    {
+        char[] chars = { 'e', 'y', 'u', 'i', 'o', 'a' };
+        int threeObserver = 0;
+        for (int i = 0; i < startString.Length && threeObserver < 3; i++)
+        {
+            if (chars.Contains(startString[i]))
+                threeObserver++;
+            else
+                threeObserver = 0;
+        }
+        return threeObserver == 3 ? false : true;
+    }
+    public static void PerformTask2037()
+    {
+        string startString = Console.ReadLine()!;
+        int k = Convert.ToInt32(Console.ReadLine());
+        string[] words = startString.Split(',');
+        Console.WriteLine(string.Join(",", words.Where((s) => (s.Length >= k)).ToArray()));
+    }
+    public static void PerformTask2038()
+    {
+        string startString = Console.ReadLine()!;
+        char[] separators = startString.GroupBy((ch) => (ch)).Where((ch) => (!Char.IsLetter(ch.Key))).Select((ch) => (ch.Key)).ToArray();
+        string[] words = startString.Split(separators);
+        Console.WriteLine(words.Select((st) => (st.Length)).Max());
+    }
+    public static void PerformTask2039()
+    {
+        string startString = Console.ReadLine()!;
+        char[] separators = startString.GroupBy((ch) => (ch)).Where((ch) => (!Char.IsLetter(ch.Key))).Select((ch) => (ch.Key)).ToArray();
+        string[] words = startString.Split(separators).Where((s) => (s != "")).ToArray();
+        Console.WriteLine(words.Length);
+    }
+    public static void PerformTask2040()
+    {
+        string startString = Console.ReadLine()!;
+        string minShift = startString;
+        for (int k = 0; k < startString.Length; k++)
+        {
+            string tempSt = string.Join("", startString.Skip(k).Concat(startString.Take(k)).ToArray());
+            if (String.Compare(minShift, tempSt) > 0)
+            {
+                minShift = tempSt;
+            }
+        }
+        Console.WriteLine(minShift);
+    }
+    public static void PerformTask2041()
+    {
+        string startString = Console.ReadLine()!;
+
+
+        for (int i = 0; i < startString.Length; i++)
+        {
+            if (CheckPalindrome(startString.Take(i)) && CheckPalindrome(startString.Skip(i)))
+            {
+                Console.WriteLine("YES");
+                return;
+            }
+        }
+        Console.WriteLine("NO");
+    }
+    private static bool CheckPalindrome(IEnumerable<Char> startString)
+    {
+        int stringLength = startString.Count();
+        var leftArray = startString.Take(stringLength / 2);
+        var rightArray = startString.Skip(stringLength % 2 == 0 ? stringLength / 2 : stringLength / 2 + 1).Reverse();
+        bool isPalindrome = Enumerable.SequenceEqual(leftArray, rightArray);
+        if (stringLength == 0 || stringLength == 1 || isPalindrome)
+        {
+            return true;
+        }
+        return false;
+    }
+    public static void PerformTask2042() 
+    {
+       
+    }
+    public static void PerformTask2043() { }
+    public static void PerformTask2044() { }
+    public static void PerformTask2045() { }
 }
