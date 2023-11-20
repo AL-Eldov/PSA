@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace path_to_space_app;
@@ -579,7 +580,7 @@ internal static class Tasks//что бы скормить задания сай�
         resultArray.Add(n);
         return resultArray.ToArray();
     }
-    public static void PerformTask2036()
+    public static void PerformTask2036()//Строки. Странные слова
     {
         int n = Convert.ToInt32(Console.ReadLine());
         string[] words = new string[n];
@@ -610,28 +611,28 @@ internal static class Tasks//что бы скормить задания сай�
         }
         return threeObserver == 3 ? false : true;
     }
-    public static void PerformTask2037()
+    public static void PerformTask2037()//Строки. Слишком короткие слова
     {
         string startString = Console.ReadLine()!;
         int k = Convert.ToInt32(Console.ReadLine());
         string[] words = startString.Split(',');
         Console.WriteLine(string.Join(",", words.Where((s) => (s.Length >= k)).ToArray()));
     }
-    public static void PerformTask2038()
+    public static void PerformTask2038()//Строки. Самое длинное слово
     {
         string startString = Console.ReadLine()!;
         char[] separators = startString.GroupBy((ch) => (ch)).Where((ch) => (!Char.IsLetter(ch.Key))).Select((ch) => (ch.Key)).ToArray();
         string[] words = startString.Split(separators);
         Console.WriteLine(words.Select((st) => (st.Length)).Max());
     }
-    public static void PerformTask2039()
+    public static void PerformTask2039()//Строки. Количество слов в тексте
     {
         string startString = Console.ReadLine()!;
         char[] separators = startString.GroupBy((ch) => (ch)).Where((ch) => (!Char.IsLetter(ch.Key))).Select((ch) => (ch.Key)).ToArray();
         string[] words = startString.Split(separators).Where((s) => (s != "")).ToArray();
         Console.WriteLine(words.Length);
     }
-    public static void PerformTask2040()
+    public static void PerformTask2040()//Строки. Наименьший циклический сдвиг
     {
         string startString = Console.ReadLine()!;
         string minShift = startString;
@@ -645,11 +646,9 @@ internal static class Tasks//что бы скормить задания сай�
         }
         Console.WriteLine(minShift);
     }
-    public static void PerformTask2041()
+    public static void PerformTask2041()//Строки. Два палиндрома
     {
         string startString = Console.ReadLine()!;
-
-
         for (int i = 0; i < startString.Length; i++)
         {
             if (CheckPalindrome(startString.Take(i)) && CheckPalindrome(startString.Skip(i)))
@@ -672,11 +671,107 @@ internal static class Tasks//что бы скормить задания сай�
         }
         return false;
     }
-    public static void PerformTask2042() 
+    public static void PerformTask2042()//Строки. Поиск образца в тексте
     {
-       
+        char[] startString = (Console.ReadLine()!).ToArray();
+        int startStringLenght = startString.Length;
+        string pattern = Console.ReadLine()!;
+        int patternLength = pattern.Length;
+        pattern = pattern.Replace("?", "\\w");
+        Regex regex = new Regex(pattern);
+        List<int> answers = new List<int>();
+        for (int i = 0; i < startStringLenght; i++)
+        {
+            if (regex.IsMatch(String.Join("", startString.Take(patternLength).ToArray())))
+            {
+                answers.Add(i);
+            }
+            startString = startString.Skip(1).ToArray();
+        }
+        foreach (int i in answers)
+        {
+            Console.Write((i + 1) + " ");
+        }
     }
-    public static void PerformTask2043() { }
-    public static void PerformTask2044() { }
-    public static void PerformTask2045() { }
+    public static void PerformTask2043()//Строки. Простой XML
+    {
+        char[] startString = (Console.ReadLine()!).ToArray();
+        int startStringLenght = startString.Length;
+        Regex regex = new Regex(@"<\w>");
+        int spaceCounter = -1;
+        string tempString = "";
+        for (int i = 0; i < startStringLenght - 4; i++)
+        {
+            tempString = String.Join("", startString.Take(3).ToArray());
+            if (regex.IsMatch(tempString))
+            {
+                spaceCounter++;
+                for (int j = 0; j < spaceCounter * 2; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write(tempString + "\n");
+                startString = startString.Skip(3).ToArray();
+            }
+            else
+            {
+                for (int j = 0; j < spaceCounter * 2; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write(String.Join("", startString.Take(4).ToArray()) + "\n");
+                spaceCounter--;
+                startString = startString.Skip(4).ToArray();
+            }
+        }
+    }
+    public static void PerformTask2044()//Строки. Декодирование по алгоритму Хаффмана
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Dictionary<string, string> codeHuffman = new Dictionary<string, string>();
+        for (int i = 0; i < n; i++)
+        {
+            string[] data = Console.ReadLine()!.Split();
+            codeHuffman.Add(data[1], data[0]);
+        }
+        string[] code = codeHuffman.Keys.ToArray();
+        char[] startString = (Console.ReadLine()!).ToArray();
+        for (int i = 0, j = 1; startString.Length > 0; i++)
+        {
+            while (!code.Contains(String.Join("", startString.Take(j).ToArray())))
+            {
+                j++;
+            }
+            Console.Write(codeHuffman[String.Join("", startString.Take(j).ToArray())]);
+            startString = startString.Skip(j).ToArray();
+            j = 1;
+        }
+    }
+    public static void PerformTask2045()//Строки. Пунктуация
+    {
+        string[] startString = Console.ReadLine()!.Split().Where((s) => (s != "")).ToArray();
+        char[] punctuationMarks = { '.', ',', '!', '?' };
+        for (int i = 0; i < startString.Length; i++)
+        {
+            if (punctuationMarks.Contains(startString[i][0]))
+            {
+                startString[i - 1] = startString[i - 1] + startString[i][0];
+                startString[i] = startString[i].Substring(1)==""?" ": startString[i].Substring(1);
+                i--;
+            }
+            else if (startString[i].Take(startString[i].Length-1).ToArray().Intersect(punctuationMarks).Count() != 0)
+            {
+                int tempLenght = startString[i].Length;
+                for (int j = 0; j < tempLenght - 1; j++)
+                {
+                    if (punctuationMarks.Contains(startString[i][j]))
+                    {
+                        startString[i] = startString[i].Insert(++j, " ");
+                        tempLenght++;
+                    }
+                }
+            }
+        }
+        Console.WriteLine(String.Join(" ", startString.Where((s)=>(s!=" "))));
+    }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("path_to_space_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9294074264b9f78e541f265a9d04e47f4b554fdc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c791eb205bb662cdcedb4322d7b9cd92af139be6")]
 [assembly: System.Reflection.AssemblyProductAttribute("path_to_space_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("path_to_space_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
