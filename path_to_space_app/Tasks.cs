@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
 namespace path_to_space_app;
@@ -38,7 +37,6 @@ internal static class Tasks//что бы скормить задания сай�
     }
     static public void PerformTask2006()//Измерение длин в Бадене
     {
-        //1 дюйм = 3см, 1 фут = 12 дюймов = 36 см
         int centimeters = Convert.ToInt32(Console.ReadLine());
         int foot = centimeters / 36;
         int centimetersWithoutFoot = centimeters % 36;
@@ -309,7 +307,7 @@ internal static class Tasks//что бы скормить задания сай�
         }
         Console.WriteLine(counter);
     }
-    public static void PerformTask2023()//Поиск во втором массиве//---------------- проходит не все тесты и я хрен знает почему
+    public static void PerformTask2023()//Поиск во втором массиве
     {
         int n1 = Convert.ToInt32(Console.ReadLine());
         int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
@@ -484,7 +482,7 @@ internal static class Tasks//что бы скормить задания сай�
             Console.Write(number + " ");
         }
     }
-    public static void PerformTask2032()//Сравнение длинных чисел//---------------- проходит не все тесты и я хрен знает почему
+    public static void PerformTask2032()//Сравнение длинных чисел
     {
         int n1 = Convert.ToInt32(Console.ReadLine());
         int[] number1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
@@ -499,7 +497,7 @@ internal static class Tasks//что бы скормить задания сай�
         int answer = num1 < num2 ? -1 : num1 == num2 ? 0 : 1;
         Console.WriteLine(answer);
     }
-    public static void PerformTask2033()//Прибавление единицы к длинному числу//---------------- проходит не все тесты и я хрен знает почему
+    public static void PerformTask2033()//Прибавление единицы к длинному числу
     {
         int n = Convert.ToInt32(Console.ReadLine());
         int[] number = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
@@ -527,7 +525,7 @@ internal static class Tasks//что бы скормить задания сай�
         int tempLenghtL = 0;
         int tempLenghtR = 0;
         int tempLenght = 0;
-        for (int i = 0; i < n - countMaxLenght; ++i)//можно достаточно просто оптимизировать, но мне лень
+        for (int i = 0; i < n - countMaxLenght; ++i)
         {
             var tempCollect = number.Skip(i);
             tempLenghtL = tempCollect.TakeWhile((n) => (number[i] - n == -1 || number[i] - n == 0)).ToArray().Length;
@@ -542,7 +540,7 @@ internal static class Tasks//что бы скормить задания сай�
         }
         Console.WriteLine($"{a} {b}");
     }
-    public static void PerformTask2035()//Период массива//---------------- проходит не все тесты и я хрен знает почему
+    public static void PerformTask2035()//Период массива
     {
         int n = Convert.ToInt32(Console.ReadLine());
         List<int> numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s)).ToList<int>();
@@ -756,10 +754,10 @@ internal static class Tasks//что бы скормить задания сай�
             if (punctuationMarks.Contains(startString[i][0]))
             {
                 startString[i - 1] = startString[i - 1] + startString[i][0];
-                startString[i] = startString[i].Substring(1)==""?" ": startString[i].Substring(1);
+                startString[i] = startString[i].Substring(1) == "" ? " " : startString[i].Substring(1);
                 i--;
             }
-            else if (startString[i].Take(startString[i].Length-1).ToArray().Intersect(punctuationMarks).Count() != 0)
+            else if (startString[i].Take(startString[i].Length - 1).ToArray().Intersect(punctuationMarks).Count() != 0)
             {
                 int tempLenght = startString[i].Length;
                 for (int j = 0; j < tempLenght - 1; j++)
@@ -772,6 +770,281 @@ internal static class Tasks//что бы скормить задания сай�
                 }
             }
         }
-        Console.WriteLine(String.Join(" ", startString.Where((s)=>(s!=" "))));
+        Console.WriteLine(String.Join(" ", startString.Where((s) => (s != " "))));
     }
+    public static void PerformTask2046()//Морской бой 
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        string[] answers = new string[n];
+        char[][] battlefield = new char[10][];
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                battlefield[j] = (Console.ReadLine()!).ToArray();
+            }
+            if (battlefield.Select((b) => (b.Count((c) => (c == '*')))).Sum() == 20)
+            {
+                int smallShipCounter = 0;
+                for (int j = 1; j < 9; j++)
+                {
+                    for (int k = 1; k < 9; k++)
+                    {
+                        if (battlefield[j][k] == '*')
+                        {
+                            bool starOnDiagonal = battlefield[j - 1][k - 1] == '*' || battlefield[j + 1][k + 1] == '*' || battlefield[j - 1][k + 1] == '*' || battlefield[j + 1][k - 1] == '*';
+                            bool starsOnCross = (battlefield[j - 1][k] == '*' || battlefield[j + 1][k] == '*') && (battlefield[j][k - 1] == '*' || battlefield[j][k + 1] == '*');
+                            if (starOnDiagonal || starsOnCross)
+                            {
+                                answers[i] = "NO";
+                            }
+                            if (battlefield[j - 1][k] == '0' && battlefield[j + 1][k] == '0' && battlefield[j][k - 1] == '0' && battlefield[j][k + 1] == '0')
+                            {
+                                smallShipCounter++;
+                            }
+
+                        }
+                    }
+                }
+                for (int j = 1; j < 9; j++)
+                {
+                    if (battlefield[0][j] == '*' && battlefield[0][j + 1] == '0' && battlefield[0][j - 1] == '0' && battlefield[1][j] == '0')
+                    {
+                        smallShipCounter++;
+                    }
+                    if (battlefield[9][j] == '*' && battlefield[9][j + 1] == '0' && battlefield[9][j - 1] == '0' && battlefield[8][j] == '0')
+                    {
+                        smallShipCounter++;
+                    }
+                    if (battlefield[j][0] == '*' && battlefield[j + 1][0] == '0' && battlefield[j - 1][0] == '0' && battlefield[j][1] == '0')
+                    {
+                        smallShipCounter++;
+                    }
+                    if (battlefield[j][9] == '*' && battlefield[j + 1][9] == '0' && battlefield[j - 1][9] == '0' && battlefield[j][8] == '0')
+                    {
+                        smallShipCounter++;
+                    }
+                }
+                if (battlefield[0][0] == '*' && battlefield[0][1] == '0' && battlefield[1][0] == '0')
+                {
+                    smallShipCounter++;
+                }
+                if (battlefield[9][9] == '*' && battlefield[9][8] == '0' && battlefield[8][9] == '0')
+                {
+                    smallShipCounter++;
+                }
+                if (battlefield[0][9] == '*' && battlefield[0][8] == '0' && battlefield[1][9] == '0')
+                {
+                    smallShipCounter++;
+                }
+                if (battlefield[9][0] == '*' && battlefield[8][0] == '0' && battlefield[9][1] == '0')
+                {
+                    smallShipCounter++;
+                }
+                if (smallShipCounter != 4)
+                {
+                    answers[i] = "NO";
+                }
+                smallShipCounter = 0;
+                for (int j = 4; j < 6; j++)
+                {
+                    for (int k = 4; k < 6; k++)
+                    {
+                        if (battlefield[j][k] == '*')
+                        {
+                            bool havUp = battlefield[j - 1][k] == '*' && battlefield[j - 2][k] == '*' && battlefield[j - 3][k] == '*' && battlefield[j - 4][k] == '*';
+                            bool havDown = battlefield[j + 1][k] == '*' && battlefield[j + 2][k] == '*' && battlefield[j + 3][k] == '*' && battlefield[j + 4][k] == '*';
+                            bool havRight = battlefield[j][k + 1] == '*' && battlefield[j][k = 2] == '*' && battlefield[j][k + 3] == '*' && battlefield[j][k + 4] == '*';
+                            bool havLeft = battlefield[j][k - 1] == '*' && battlefield[j][k - 2] == '*' && battlefield[j][k - 3] == '*' && battlefield[j][k - 4] == '*';
+                            if (havUp || havDown || havRight || havLeft)
+                            {
+                                answers[i] = "NO";
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                answers[i] = "NO";
+            }
+            if (i != n - 1)
+            {
+                Console.ReadLine();
+            }
+            answers[i] = answers[i] == "NO" ? "NO" : "YES";
+        }
+        foreach (var i in answers)
+        {
+            Console.WriteLine(i);
+        }
+    }
+    public static void PerformTask2047()//Выравнивание по центру
+    {
+        List<string> text = new List<string>();
+        string tempString = "Ну работай плиз";
+        do
+        {
+            tempString = Console.ReadLine()!;
+            if (tempString != null)
+                text.Add(tempString);
+
+        } while (tempString != null);
+        int maxLenght = text.Select((t) => (t.Length)).Max();
+        for (int i = 0; i < maxLenght + 2; i++)
+            Console.Write("*");
+        Console.Write("\n");
+        int leftObserver = 0;
+        int rightObserver = 0;
+        bool leftOrRight = true;
+        for (int i = 0; i < text.Count(); i++)
+        {
+            int tempLenght = text[i].Length;
+            Console.Write("*");
+            if ((maxLenght - tempLenght) % 2 == 0)
+            {
+                leftObserver = 0;
+                rightObserver = 0;
+            }
+            else if (leftOrRight)
+            {
+                leftObserver = 0;
+                rightObserver = 1;
+                leftOrRight = false;
+            }
+            else
+            {
+                leftObserver = 1;
+                rightObserver = 0;
+                leftOrRight = true;
+            }
+            for (int j = 0; j < (maxLenght - tempLenght) / 2 + leftObserver; j++)
+            {
+                Console.Write(" ");
+            }
+            Console.Write(text[i]);
+            for (int j = 0; j < (maxLenght - tempLenght) / 2 + rightObserver; j++)
+            {
+                Console.Write(" ");
+            }
+
+            Console.Write("*\n");
+        }
+        for (int i = 0; i < maxLenght + 2; i++)
+            Console.Write("*");
+    }
+    public static void PerformTask2048()//Каталоги
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        string[] paths = new string[n];
+        for (int i = 0; i < n; i++)
+        {
+            paths[i] = Console.ReadLine()!;
+        }
+        Array.Sort(paths);
+        List<string> uniquePaths = new List<string>();
+        for (int i = 0; i < n - 1; i++)
+        {
+            if (!paths[i + 1].Contains(paths[i] + "/"))
+                uniquePaths.Add(paths[i]);
+        }
+        uniquePaths.Add(paths[n - 1]);
+        string[][] directoryTable = new string[uniquePaths.Count()][];
+        for (int i = 0; i < uniquePaths.Count(); i++)
+        {
+            directoryTable[i] = uniquePaths[i].Split('/');
+        }
+        for (int i = directoryTable.Length - 1; i > 0; i--)
+        {
+            for (int j = 0; j < directoryTable[i].Length; j++)
+            {
+                if (directoryTable[i].Length == directoryTable[i - 1].Length && directoryTable[i][j] == directoryTable[i - 1][j])
+                {
+                    directoryTable[i][j] = "";
+                }
+            }
+        }
+        List<string> results = new List<string>();
+        for (int i = 0; i < directoryTable.Length; i++)
+        {
+            for (int j = 0; j < directoryTable[i].Length; j++)
+            {
+                if (directoryTable[i][j] == "")
+                    continue;
+                string tempPlusstring = "";
+                for (int k = 0; k < j; k++)
+                    tempPlusstring += "+";
+                results.Add(tempPlusstring + directoryTable[i][j]);
+            }
+        }
+        for (int i = 0; i < results.Count(); i++)
+        {
+            Console.WriteLine(results[i]);
+        }
+    }
+    public static void PerformTask2049()//Менеджер памяти
+    {
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        bool[] memory = new bool[data[1]];
+        Dictionary<int, int[]> fragment = new Dictionary<int, int[]>();
+        for (int i = 0, k = 1; i < data[0]; i++)
+        {
+            string operation = Console.ReadLine()!;
+            if (operation[0] == 'a')
+            {
+                int needMermory = Convert.ToInt32(string.Join("", operation.Skip(6).ToArray()));
+                bool isDone = false;
+                for (int j = 0; j < data[1] - needMermory + 1; j++)
+                {
+                    if (memory.Skip(j).Take(needMermory).Count(m => m == false) == needMermory)
+                    {
+                        fragment.Add(k, new int[] { j, needMermory });
+                        Console.WriteLine(k);
+                        for (int h = j; h < j + needMermory; h++)
+                        {
+                            memory[h] = true;
+                        }
+                        isDone = true;
+                        k++;
+                        break;
+                    }
+                }
+                if (!isDone)
+                {
+                    Console.WriteLine("NULL");
+                    isDone = false;
+                }
+            }
+            else if (operation[0] == 'e')
+            {
+                int fragmentDelete = Convert.ToInt32(string.Join("", operation.Skip(6).ToArray()));
+                if (fragment.ContainsKey(fragmentDelete))
+                {
+                    for (int j = fragment[fragmentDelete][0]; j < fragment[fragmentDelete][0] + fragment[fragmentDelete][1]; j++)
+                    {
+                        memory[j] = false;
+                    }
+                    fragment.Remove(fragmentDelete);
+                }
+                else
+                    Console.WriteLine("ILLEGAL_ERASE_ARGUMENT");
+            }
+            else
+            {
+                int busyMemory = memory.Count(m => m == true);
+                memory = new bool[data[1]];
+                for (int j = 0; j < busyMemory; j++)
+                {
+                    memory[j] = true;
+                }
+                int memoryObserver = 0;
+                foreach (var temp in fragment.OrderBy(x => x.Value[0]).ToDictionary(x => x.Key, x => x.Value))
+                {
+                    fragment[temp.Key] = new int[] { memoryObserver, fragment[temp.Key][1] };
+                    memoryObserver += fragment[temp.Key][1];
+                }
+            }
+        }
+    }
+    public static void PerformTask2050() { }
 }
