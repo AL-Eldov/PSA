@@ -313,25 +313,13 @@ internal static class Tasks//что бы скормить задания сай�
         int[] numbers1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
         int n2 = Convert.ToInt32(Console.ReadLine());
         int[] numbers2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        Dictionary<int, int> reapeats = new Dictionary<int, int>();
         int[] resultArray = new int[n1];
         for (int i = 0, j = 0; i < n1; i++)
         {
             if (numbers2.Contains(numbers1[i]))
             {
-                if (!reapeats.ContainsKey(numbers1[i]))
-                {
-                    reapeats.Add(numbers1[i], 1);
-                    resultArray[j] = numbers1[i];
-                    j++;
-                }
-                else if (numbers2.Count((n) => (n == numbers1[i])) > reapeats[numbers1[i]])
-                {
-                    reapeats[numbers1[i]] += 1;
-                    resultArray[j] = numbers1[i];
-                    j++;
-
-                }
+                resultArray[j] = numbers1[i];
+                j++;
             }
         }
         Console.WriteLine(resultArray.Count((n) => (n != 0)));
@@ -488,31 +476,73 @@ internal static class Tasks//что бы скормить задания сай�
         int[] number1 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
         int n2 = Convert.ToInt32(Console.ReadLine());
         int[] number2 = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        int num1 = (int)number1.Select((n) => (n * Math.Pow(10, --n1))).ToArray().Sum();
-        int num2 = (int)number2.Select((n) => (n * Math.Pow(10, --n2))).ToArray().Sum();
-
-        Console.WriteLine(num1);
-        Console.WriteLine(num2);
-
-        int answer = num1 < num2 ? -1 : num1 == num2 ? 0 : 1;
-        Console.WriteLine(answer);
+        bool isEqual = true;
+        if (n1 < n2)
+        {
+            Console.WriteLine(-1);
+        }
+        else if (n1 > n2)
+        {
+            Console.WriteLine(1);
+        }
+        else
+        {
+            for (int i = 0; i < n1; i++)
+            {
+                if (number1[i] < number2[i])
+                {
+                    Console.WriteLine(-1);
+                    isEqual = false;
+                    break;
+                }
+                else if (number1[i] > number2[i])
+                {
+                    Console.WriteLine(1);
+                    isEqual = false;
+                    break;
+                }
+            }
+            if (isEqual)
+                Console.WriteLine(0);
+        }
     }
     public static void PerformTask2033()//Прибавление единицы к длинному числу
     {
         int n = Convert.ToInt32(Console.ReadLine());
         int[] number = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
-        int num = (int)number.Select((x) => (x * Math.Pow(10, --n))).ToArray().Sum() + 1;
-        n = num.ToString().Length > (num - 1).ToString().Length ? number.Length + 1 : number.Length;
-        int[] resultArray = new int[n];
-        for (int i = 0; i < n; i++)
+        int[] result = new int[n + 1];
+        bool needPlus = true;
+        for (int i = n - 1; i >= 0; i--)
         {
-            resultArray[n - 1 - i] = num % 10;
-            num /= 10;
+            if (needPlus)
+            {
+                if (number[i] + 1 != 10)
+                {
+                    result[i + 1] = number[i] + 1;
+                    needPlus = false;
+                }
+                else
+                {
+                    result[i + 1] = 0;
+                }
+            }
+            else
+            {
+                result[i + 1] = number[i];
+            }
         }
-        Console.WriteLine(n);
-        foreach (var temp in resultArray.SkipWhile((x) => (x == 0)))
+        result[0] = result[1] == 0 ? 1 : 0;
+        if (result[0] == 0)
         {
-            Console.Write(temp + " ");
+            Console.WriteLine(n);
+            for (int i = 1; i < n + 1; i++)
+                Console.Write(result[i] + " ");
+        }
+        else
+        {
+            Console.WriteLine(n + 1);
+            foreach (int num in result)
+                Console.Write(num + " ");
         }
     }
     public static void PerformTask2034()//Наидлиннейший почти константный подмассив
@@ -567,15 +597,14 @@ internal static class Tasks//что бы скормить задания сай�
     }
     private static int[] GetNumberDivider(int n)
     {
-        List<int> resultArray = new List<int>() { 1 };
-        for (int i = 2; i < Math.Sqrt(n) + 1; i++)
+        List<int> resultArray = new List<int>() { };
+        for (int i = 1; i <= n; i++)
         {
             if (n % i == 0)
             {
                 resultArray.Add(i);
             }
         }
-        resultArray.Add(n);
         return resultArray.ToArray();
     }
     public static void PerformTask2036()//Строки. Странные слова
@@ -945,7 +974,7 @@ internal static class Tasks//что бы скормить задания сай�
         List<string> uniquePaths = new List<string>();
         for (int i = 0; i < n - 1; i++)
         {
-            if (!paths[i + 1].Contains(paths[i] + "/"))
+            if (!paths[i + 1].StartsWith(paths[i] + "/"))
                 uniquePaths.Add(paths[i]);
         }
         uniquePaths.Add(paths[n - 1]);
@@ -977,6 +1006,7 @@ internal static class Tasks//что бы скормить задания сай�
                 results.Add(tempPlusstring + directoryTable[i][j]);
             }
         }
+        results = results.Distinct().ToList();
         for (int i = 0; i < results.Count(); i++)
         {
             Console.WriteLine(results[i]);
@@ -1046,5 +1076,101 @@ internal static class Tasks//что бы скормить задания сай�
             }
         }
     }
-    public static void PerformTask2050() { }
+    public static void PerformTask2050()//Ini-файл
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        string[] iniFail = new string[n];
+        for (int i = 0; i < n; i++)
+        {
+            iniFail[i] = Console.ReadLine()!;
+        }
+        iniFail = iniFail.Select(s => s.Contains('=') ? string.Join("", s.TakeWhile(t => t != '=').ToArray()).Trim() + "=" + string.Join("", s.SkipWhile(t => t != '=').Skip(1).ToArray()).Trim() : s.Replace(" ", "")).Where(s => s != "" && s[0] != ';').ToArray();
+        Dictionary<string, string[]> iniBlocks = new Dictionary<string, string[]>();
+        iniBlocks.Add("", new string[] { });
+        string[] tempString = new string[] { };
+        for (int i = 0; i < iniFail.Length; i++)
+        {
+            if (iniFail[i].StartsWith("["))
+            {
+                tempString = iniFail.Skip(i + 1).TakeWhile(s => !s.StartsWith("[")).ToArray();
+                if (iniBlocks.ContainsKey(iniFail[i]))
+                {
+                    iniBlocks[iniFail[i]] = iniBlocks[iniFail[i]].Concat(tempString).ToArray();
+                }
+                else
+                {
+                    iniBlocks.Add(iniFail[i], tempString);
+                }
+                i += tempString.Length;
+
+            }
+            else
+            {
+                tempString = iniFail.Skip(i).TakeWhile(s => !s.StartsWith("[")).ToArray();
+                iniBlocks[""] = iniBlocks[""].Concat(tempString).ToArray();
+                i += tempString.Length - 1;
+            }
+        }
+        string[] fragments = iniBlocks.Keys.ToArray();
+        Array.Sort(fragments);
+        foreach (string key in fragments)
+        {
+            if (key != "")
+                Console.WriteLine(key);
+            string[] tempArray = iniBlocks[key].ToArray();
+            for (int i = 0; i < tempArray.Length; i++)
+            {
+                for (int j = i + 1; j < tempArray.Length; j++)
+                {
+                    if (tempArray[j].StartsWith(string.Join("", tempArray[i].TakeWhile(s => s != '=').ToArray()) + "="))
+                    {
+                        tempArray[i] = "";
+                        break;
+                    }
+                }
+            }
+            Array.Sort(tempArray);
+            for (int i = 0; i < tempArray.Length - 1; i++)
+            {
+                if (tempArray[i] != "")
+                    Console.WriteLine(tempArray[i]);
+            }
+            if (tempArray.Length > 0)
+                Console.WriteLine(tempArray[tempArray.Length - 1]);
+        }
+    }
+    public static void PerformTask2051()//Структуры данных. Скобочки
+    {
+        char[] PSP = Console.ReadLine()?.ToArray()!;
+        {int leftScopeCounter = 0;
+        for (int i = 0; i < PSP.Length; i++)
+        {
+            if (PSP[i] == '(')
+            {
+                for (int j = i + 1; j < PSP.Length; j++)
+                
+                    if (PSP[j] == '(')
+                        leftScopeCounter++;
+                    else if (leftScopeCounter == 0 && PSP[j] == ')')
+                    {
+                        Console.WriteLine((i + 1) + " " + (j + 1));
+                        break;
+                    }
+                    else
+                        leftScopeCounter--;
+                }
+            }
+        }
+    }
+    public static void PerformTask2052() { }
+    public static void PerformTask2053() { }
+    public static void PerformTask2054() { }
+    public static void PerformTask2055() { }
+    public static void PerformTask2056() { }
+    public static void PerformTask2057() { }
+    public static void PerformTask2058() { }
+    public static void PerformTask2059() { }
+    public static void PerformTask2060() { }
+    public static void PerformTask2061() { }
+    public static void PerformTask2062() { }
 }
