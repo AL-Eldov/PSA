@@ -1142,35 +1142,441 @@ internal static class Tasks//что бы скормить задания сай�
     public static void PerformTask2051()//Структуры данных. Скобочки
     {
         char[] PSP = Console.ReadLine()?.ToArray()!;
-        {int leftScopeCounter = 0;
-        for (int i = 0; i < PSP.Length; i++)
+        Stack<int> tempBag = new Stack<int>();
+        int[][] answers = new int[PSP.Length / 2][];
+        for (int i = 0, j = 0; i < PSP.Length; i++)
         {
             if (PSP[i] == '(')
+                tempBag.Push(i + 1);
+            else
+                answers[j++] = new int[] { tempBag.Pop(), (i + 1) };
+        }
+        foreach (var temp in answers.OrderBy(t => t[0]))
+        {
+            Console.WriteLine(temp[0] + " " + temp[1]);
+        }
+    }
+    public static void PerformTask2052()//Структуры данных. Вычеркиваем числа
+    {
+        int[] parametrs = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        List<int> numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s)).ToList<int>();
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        for (int i = 0; i < parametrs[1]; i++)
+        {
+            int j = data[i];
+            for (; j <= numbers.Count();)
             {
-                for (int j = i + 1; j < PSP.Length; j++)
-                
-                    if (PSP[j] == '(')
-                        leftScopeCounter++;
-                    else if (leftScopeCounter == 0 && PSP[j] == ')')
-                    {
-                        Console.WriteLine((i + 1) + " " + (j + 1));
-                        break;
-                    }
-                    else
-                        leftScopeCounter--;
+                numbers[j - 1] = 0;
+                j += data[i];
+            }
+            numbers = numbers.Where(x => x != 0).ToList();
+        }
+        foreach (int i in numbers)
+            if (i != 0)
+                Console.Write(i + " ");
+    }
+    public static void PerformTask2053()//Структуры данных. Шифрование
+    {
+        List<string> text = new List<string>();
+        string tempString = "Ну работай плиз";
+        do
+        {
+            tempString = Console.ReadLine()!;
+            if (tempString != null)
+                text.Add(tempString);
+
+        } while (tempString != null);
+        Dictionary<string, int> coding = new Dictionary<string, int>();
+        int codihgCounter = 1;
+        for (int i = 0; i < text.Count(); i++)
+        {
+            string[] splitText = text[i].Split(' ');
+            for (int j = 0; j < splitText.Length; j++)
+            {
+                if (coding.ContainsKey(splitText[j].Replace("\n", "").ToLower()) && splitText[j] != "")
+                {
+                    Console.Write(coding[splitText[j].Replace("\n", "").ToLower()] + " ");
+                }
+                else if (splitText[j] != "")
+                {
+                    Console.Write(codihgCounter + " ");
+                    coding.Add(splitText[j].Replace("\n", "").ToLower(), codihgCounter);
+                    codihgCounter++;
                 }
             }
         }
     }
-    public static void PerformTask2052() { }
-    public static void PerformTask2053() { }
-    public static void PerformTask2054() { }
-    public static void PerformTask2055() { }
-    public static void PerformTask2056() { }
-    public static void PerformTask2057() { }
-    public static void PerformTask2058() { }
-    public static void PerformTask2059() { }
-    public static void PerformTask2060() { }
-    public static void PerformTask2061() { }
-    public static void PerformTask2062() { }
+    public static void PerformTask2054()//Структуры данных. Последовательности
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Dictionary<int, List<int>> answers = new Dictionary<int, List<int>>();
+        for (int i = 0; i < n; i++)
+        {
+            int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s))).Skip(1).ToArray();
+            for (int j = 0; j < numbers.Length; j++)
+            {
+                if (answers.ContainsKey(numbers[j]))
+                {
+                    answers[numbers[j]].Add(i + 1);
+                }
+                else
+                {
+                    answers.Add(numbers[j], new List<int>() { i + 1 });
+                }
+            }
+        }
+        int[] keys = answers.Keys.ToArray();
+        Array.Sort(keys);
+        foreach (int key in keys)
+        {
+            Console.Write(key + " ");
+            List<int> tempBag = answers[key].Distinct().ToList();
+            tempBag.Sort();
+            foreach (int value in tempBag)
+            {
+                Console.Write(value + " ");
+            }
+            Console.Write("\n");
+        }
+    }
+    public static void PerformTask2055()//Структуры данных.Период и предпериод
+    {
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        int a = data[0];
+        int X = data[1];
+        int Y = data[2];
+        int M = data[3];
+        int newA = -1;
+        int lengAnswers = 0;
+        while (true)
+        {
+            newA = (X * a + Y) % M;
+            if (newA == a)
+                break;
+            a = newA;
+            lengAnswers++;
+        }
+        Console.WriteLine(a + " " + lengAnswers);
+    }
+    public static void PerformTask2056()//Структуры данных. Самое популярное слово
+    {
+        List<string> text = new List<string>();
+        string tempString = "Ну работай плиз";
+        do
+        {
+            tempString = Console.ReadLine()!;
+            if (tempString != null)
+                text.Add(tempString);
+
+        } while (tempString != null);
+        Dictionary<string, int> wordCounter = new Dictionary<string, int>();
+        for (int i = 0; i < text.Count(); i++)
+        {
+            string[] splitText = text[i].Split(' ');
+            for (int j = 0; j < splitText.Length; j++)
+            {
+                string tempWord = splitText[j].Replace("\n", "").ToLower();
+                if (wordCounter.ContainsKey(tempWord) && splitText[j] != "")
+                {
+                    wordCounter[tempWord] += 1;
+                }
+                else if (splitText[j] != "")
+                {
+                    wordCounter.Add(tempWord, 1);
+                }
+            }
+        }
+        int numberCommonWord = wordCounter.Values.Max();
+        string[] answers = wordCounter.Where(x => x.Value == numberCommonWord).Select(x => x.Key).ToArray();
+        Array.Sort(answers);
+        foreach (string answer in answers)
+            Console.WriteLine(answer);
+    }
+    public static void PerformTask2057()//Структуры данных.Множество
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Dictionary<int, int> numberCounter = new Dictionary<int, int>();
+        int minNumber = 2147483647;
+        numberCounter.Add(2147483647, 0);
+        for (int i = 0; i < n; i++)
+        {
+            int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+            if (data[0] == 1)
+            {
+                if (numberCounter.ContainsKey(data[1]))
+                {
+                    numberCounter[data[1]] += 1;
+                }
+                else
+                {
+                    numberCounter.Add(data[1], 1);
+                    minNumber = minNumber > data[1] ? data[1] : minNumber;
+                }
+            }
+            else
+            {
+                if (numberCounter[minNumber] - 1 != 0)
+                {
+                    Console.WriteLine(minNumber);
+                    numberCounter[minNumber] -= 1;
+                }
+                else
+                {
+                    Console.WriteLine(minNumber);
+                    numberCounter.Remove(minNumber);
+                    minNumber = numberCounter.Keys.Min();
+                }
+            }
+        }
+    }
+    public static void PerformTask2058()//Структуры данных. Количество подстрок
+    {
+        char[] startString = Console.ReadLine()?.ToArray()!;
+        Dictionary<string, int> subStrings = new Dictionary<string, int>();
+        for (int i = 1; i <= startString.Length; i++)
+        {
+            for (int j = 0; j + i <= startString.Length; j++)
+            {
+                string tempKey = string.Join("", startString.Skip(j).Take(i).ToArray());
+                if (!subStrings.ContainsKey(tempKey))
+                {
+                    subStrings.Add(tempKey, 0);
+                }
+            }
+        }
+        Console.WriteLine(subStrings.Count());
+    }
+    public static void PerformTask2059()//Структуры данных. Левее, больше... но меньше
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        int[] startData = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        for (int i = 0; i < n; i++)
+        {
+            int startValue = startData[i];
+            int tempMaxValue = 2147483647;
+            for (int j = 0; j <= i; j++)
+            {
+                if (startData[j] > startValue && tempMaxValue >= startData[j])
+                    tempMaxValue = startData[j];
+            }
+            Console.Write((tempMaxValue == 2147483647 ? -1 : tempMaxValue) + " ");
+        }
+    }
+    public static void PerformTask2060()//Структуры данных. Система учета оценок
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Dictionary<string, List<int>> answers = new Dictionary<string, List<int>>();
+        for (int i = 0; i < n; i++)
+        {
+            string[] nameRating = Console.ReadLine()?.Split()!;
+            if (answers.ContainsKey(nameRating[0]))
+            {
+                answers[nameRating[0]].Add(Convert.ToInt32(nameRating[1]));
+            }
+            else
+            {
+                answers.Add(nameRating[0], new List<int>() { Convert.ToInt32(nameRating[1]) });
+            }
+        }
+        string[] names = answers.Keys.ToArray();
+        Array.Sort(names);
+        foreach (string name in names)
+        {
+            Console.WriteLine(name + " " + (int)answers[name].Sum() / answers[name].Count());
+        }
+    }
+    public static void PerformTask2061()//Структуры данных. Форум
+    {
+        int n = Convert.ToInt32(Console.ReadLine());
+        Dictionary<string, List<string>> answers = new Dictionary<string, List<string>>();
+        for (int i = 0; i < n - 1; i++)
+        {
+            string[] data = Console.ReadLine()?.Split()!;
+            if (answers.ContainsKey(data[1]))
+            {
+                answers[data[1]].Add(data[0]);
+            }
+            else
+            {
+                answers.Add(data[1], new List<string>() { data[0] });
+            }
+        }
+        string tempName = "main";
+        Console.WriteLine(tempName);
+        GetDescendants(answers, tempName, 0);
+    }
+    private static void GetDescendants(Dictionary<string, List<string>> answers, string tempName, int n)
+    {
+        if (!answers.ContainsKey(tempName))
+        {
+            return;
+        }
+        n++;
+        answers[tempName].Sort();
+        foreach (var temp in answers[tempName])
+        {
+            for (int i = 1; i <= n * 2; i++)
+                Console.Write(" ");
+            Console.WriteLine(temp);
+            GetDescendants(answers, temp, n);
+        }
+    }
+    public static void PerformTask2062()//Структуры данных. Точки
+    {
+        int[] startData = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        Dictionary<string, Point> points = new Dictionary<string, Point>();
+        for (int i = 0; i < startData[0]; i++)
+        {
+            string represent = Console.ReadLine()!;
+            int[] coordinats = Array.ConvertAll(represent.Split(), (s) => (int.Parse(s)));
+            points.Add(represent, new Point(coordinats[0], coordinats[1]));
+        }
+        for (int i = 0; i < startData[1]; i++)
+        {
+            string[] srtPoint = points.Keys.ToArray();
+            foreach (string srt in srtPoint)
+            {
+                string upPoint = points[srt].x + " " + (points[srt].y + 1);
+                string dowmPoint = points[srt].x + " " + (points[srt].y - 1);
+                string leftPoint = (points[srt].x - 1) + " " + points[srt].y;
+                string rightPoint = (points[srt].x + 1) + " " + points[srt].y;
+                if (!points.ContainsKey(upPoint))
+                    points.Add(upPoint, new Point(points[srt].x, points[srt].y + 1));
+                if (!points.ContainsKey(dowmPoint))
+                    points.Add(dowmPoint, new Point(points[srt].x, points[srt].y - 1));
+                if (!points.ContainsKey(leftPoint))
+                    points.Add(leftPoint, new Point(points[srt].x - 1, points[srt].y));
+                if (!points.ContainsKey(rightPoint))
+                    points.Add(rightPoint, new Point(points[srt].x + 1, points[srt].y));
+            }
+        }
+        Point[] tempPoints = points.Values.ToArray();
+        Array.Sort(tempPoints);
+        foreach (Point point in tempPoints)
+            Console.WriteLine(point.ToString());
+    }
+    public static void PerformTask2063() { }
+    public static void PerformTask2064() { }
+    public static void PerformTask2065()//Рекурсия.Фрактал
+    {//белый - ложь, черный - истина
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        if (data[0] == 1)
+        {
+            bool[][] litleFacktal = { new bool[] { true, false }, new bool[] { true, true } };
+            if (litleFacktal[data[1] - 1][data[2] - 1])
+                Console.WriteLine("BLACK");
+            else
+                Console.WriteLine("WHITE");
+            return;
+        }
+        int lenght = (int)Math.Pow(2, data[0] - 1);
+        bool[][] facktal = new bool[lenght][];
+        for (int i = 0; i < lenght; i++)
+            facktal[i] = new bool[lenght];
+        facktal[0][0] = true;
+        facktal[0][1] = false;
+        facktal[1][0] = true;
+        facktal[1][1] = true;
+        int presentDegree = 1;
+        while (true)
+        {
+            if (data[0] - 1 == presentDegree)
+                break;
+            int smalSize = (int)Math.Pow(2, presentDegree);
+            for (int i = 0; i < smalSize; i++)
+            {
+                for (int j = 0; j < smalSize; j++)
+                {
+                    facktal[i + smalSize][j + smalSize] = facktal[i][j];
+                }
+            }
+            if ((presentDegree + 1) % 2 == 0)
+            {
+                for (int i = 0; i < smalSize; i++)
+                    for (int j = 0; j < smalSize; j++)
+                        facktal[i][j + smalSize] = true;
+            }
+            presentDegree++;
+        }
+        if (data[1] <= lenght && data[2] > lenght)
+        {
+            if (data[0] % 2 == 0)
+                Console.WriteLine("BLACK");
+            else
+                Console.WriteLine("WHITE");
+        }
+        else if (data[1] > lenght && data[2] <= lenght)
+        {
+            Console.WriteLine("WHITE");
+        }
+        else
+        {
+            if (facktal[(data[1] > lenght ? data[1] - lenght : data[1]) - 1][(data[2] > lenght ? data[2] - lenght : data[2]) - 1])
+                Console.WriteLine("BLACK");
+            else
+                Console.WriteLine("WHITE");
+        }
+    }
+    public static void PerformTask2066()//Рекурсия. Перемешивание массива
+    {
+        int n = Convert.ToInt32(Console.ReadLine());//не понадобилось но в задаче должно быть
+        int[] numbers = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int[] result = GetResultArray(numbers);
+        foreach (int number in result)
+            Console.Write(number + " ");
+    }
+    private static int[] GetResultArray(int[] startArray)
+    {
+        if (startArray.Length == 2 || startArray.Length == 1)
+            return startArray.Reverse().ToArray();
+        int[] tempArray = startArray.Reverse().ToArray();
+        int[] leftPart = tempArray.Take(startArray.Length / 2).ToArray();
+        int[] rightPart = tempArray.Skip(startArray.Length / 2).ToArray();
+        return GetResultArray(leftPart).Concat(GetResultArray(rightPart)).ToArray();
+    }
+    public static void PerformTask2067()//Рекурсия. Шифр
+    {
+        string cipher = Console.ReadLine()!;
+        Console.WriteLine(UnCiphering(cipher));
+    }
+    private static int UnCiphering(string cipher)
+    {
+        if (cipher.Length == 1)
+            return Convert.ToInt32(cipher);
+        else if (cipher.Length == 0)
+            return 0;
+        int maxNumber = Array.ConvertAll(string.Join(" ", cipher.ToArray()).Split(), s => int.Parse(s)).Max();
+        int x = cipher.IndexOf(maxNumber.ToString());
+        string leftStr = string.Join("", cipher.Take(x).ToArray());
+        string rightStr = string.Join("", cipher.Skip(x + 1).ToArray());
+        return UnCiphering(rightStr) + maxNumber - UnCiphering(leftStr);
+    }
+}
+
+struct Point : IComparable<Point>
+{
+    public int x;
+    public int y;
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+    public int CompareTo(Point tempPoint)
+    {
+        if (x < tempPoint.x)
+            return -1;
+        else if (x > tempPoint.x)
+            return 1;
+        else if (x == tempPoint.x && y < tempPoint.y)
+            return -1;
+        else if (x == tempPoint.x && y > tempPoint.y)
+            return 1;
+        else
+            return 0;
+    }
+    public override string ToString()
+    {
+        return x + " " + y;
+    }
 }
