@@ -10,6 +10,6 @@ class Solution
 {
     static void Main()
     {
-        Tasks.PerformTask2067();
+        Tasks.PerformTask2050();
     }
 }

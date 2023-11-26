@@ -971,45 +971,38 @@ internal static class Tasks//что бы скормить задания сай�
             paths[i] = Console.ReadLine()!;
         }
         Array.Sort(paths);
-        List<string> uniquePaths = new List<string>();
-        for (int i = 0; i < n - 1; i++)
+        for (int i = 0; i < n; i++)
         {
-            if (!paths[i + 1].StartsWith(paths[i] + "/"))
-                uniquePaths.Add(paths[i]);
-        }
-        uniquePaths.Add(paths[n - 1]);
-        string[][] directoryTable = new string[uniquePaths.Count()][];
-        for (int i = 0; i < uniquePaths.Count(); i++)
-        {
-            directoryTable[i] = uniquePaths[i].Split('/');
-        }
-        for (int i = directoryTable.Length - 1; i > 0; i--)
-        {
-            for (int j = 0; j < directoryTable[i].Length; j++)
+            for (int j = 0; j < n; j++)
             {
-                if (directoryTable[i].Length == directoryTable[i - 1].Length && directoryTable[i][j] == directoryTable[i - 1][j])
+                if (paths[j].IndexOf("/" + new string(paths[i].TakeWhile(x => x != '/').ToArray())) != -1 && i != j)
                 {
-                    directoryTable[i][j] = "";
+                    paths[i] = new string(paths[j].Take(paths[j].IndexOf("/" + new string(paths[i].TakeWhile(x => x != '/').ToArray())) + 1).ToArray()) + paths[i];
+                    break;
                 }
             }
         }
-        List<string> results = new List<string>();
-        for (int i = 0; i < directoryTable.Length; i++)
+        StringBuilder spacePath = new StringBuilder();
+        List<string> answers = new List<string>();
+        foreach (string path in paths)
         {
-            for (int j = 0; j < directoryTable[i].Length; j++)
+            string endPath = path;
+            for (int i = 0; i <= path.Count(p => p == '/'); i++)
             {
-                if (directoryTable[i][j] == "")
-                    continue;
-                string tempPlusstring = "";
-                for (int k = 0; k < j; k++)
-                    tempPlusstring += "+";
-                results.Add(tempPlusstring + directoryTable[i][j]);
+                string startPath = new string(endPath.TakeWhile(x => x != '/').ToArray());
+                endPath = new string(endPath.Skip(startPath.Length + 1).ToArray());
+                for (int j = 0; j < i; j++)
+                {
+                    spacePath.Append('+');
+                }
+                spacePath.Append(startPath);
+                answers.Add(spacePath.ToString());
+                spacePath.Clear();
             }
         }
-        results = results.Distinct().ToList();
-        for (int i = 0; i < results.Count(); i++)
+        foreach (string path in answers.Distinct())
         {
-            Console.WriteLine(results[i]);
+            Console.WriteLine(path);
         }
     }
     public static void PerformTask2049()//Менеджер памяти
@@ -1084,9 +1077,9 @@ internal static class Tasks//что бы скормить задания сай�
         {
             iniFail[i] = Console.ReadLine()!;
         }
-        iniFail = iniFail.Select(s => s.Contains('=') ? string.Join("", s.TakeWhile(t => t != '=').ToArray()).Trim() + "=" + string.Join("", s.SkipWhile(t => t != '=').Skip(1).ToArray()).Trim() : s.Replace(" ", "")).Where(s => s != "" && s[0] != ';').ToArray();
+        iniFail = iniFail.Select(s => s.Contains('=') ? string.Join("", s.TakeWhile(t => t != '=').ToArray()).Trim() + "=" + string.Join("", s.SkipWhile(t => t != '=').Skip(1).ToArray()).Trim() : s.Replace(" ", "")).Where(s => s != "" && s[0] != ';'&& s != "\n").ToArray();
         Dictionary<string, string[]> iniBlocks = new Dictionary<string, string[]>();
-        iniBlocks.Add("", new string[] { });
+        iniBlocks.Add("[]", new string[] { });
         string[] tempString = new string[] { };
         for (int i = 0; i < iniFail.Length; i++)
         {
@@ -1102,12 +1095,11 @@ internal static class Tasks//что бы скормить задания сай�
                     iniBlocks.Add(iniFail[i], tempString);
                 }
                 i += tempString.Length;
-
             }
             else
             {
                 tempString = iniFail.Skip(i).TakeWhile(s => !s.StartsWith("[")).ToArray();
-                iniBlocks[""] = iniBlocks[""].Concat(tempString).ToArray();
+                iniBlocks["[]"] = iniBlocks["[]"].Concat(tempString).ToArray();
                 i += tempString.Length - 1;
             }
         }
@@ -1115,7 +1107,7 @@ internal static class Tasks//что бы скормить задания сай�
         Array.Sort(fragments);
         foreach (string key in fragments)
         {
-            if (key != "")
+            if (key != "[]")
                 Console.WriteLine(key);
             string[] tempArray = iniBlocks[key].ToArray();
             for (int i = 0; i < tempArray.Length; i++)
@@ -1130,13 +1122,11 @@ internal static class Tasks//что бы скормить задания сай�
                 }
             }
             Array.Sort(tempArray);
-            for (int i = 0; i < tempArray.Length - 1; i++)
+            for (int i = 0; i < tempArray.Length; i++)
             {
                 if (tempArray[i] != "")
                     Console.WriteLine(tempArray[i]);
             }
-            if (tempArray.Length > 0)
-                Console.WriteLine(tempArray[tempArray.Length - 1]);
         }
     }
     public static void PerformTask2051()//Структуры данных. Скобочки
@@ -1246,17 +1236,21 @@ internal static class Tasks//что бы скормить задания сай�
         int X = data[1];
         int Y = data[2];
         int M = data[3];
-        int newA = -1;
-        int lengAnswers = 0;
+        Dictionary<int, string> uniqueNumbers = new Dictionary<int, string>();
+        uniqueNumbers.Add(a, "");
+        int next = -1;
         while (true)
         {
-            newA = (X * a + Y) % M;
-            if (newA == a)
+            next = (X * a + Y) % M;
+            a = next;
+            if (uniqueNumbers.ContainsKey(next))
                 break;
-            a = newA;
-            lengAnswers++;
+            else
+                uniqueNumbers.Add(next, "");
         }
-        Console.WriteLine(a + " " + lengAnswers);
+        int cycleLength = uniqueNumbers.Keys.SkipWhile(x => x != a).Count();
+        int NumberOutCycleElemts = uniqueNumbers.Keys.TakeWhile(x => x != a).Count();
+        Console.WriteLine(cycleLength + " " + NumberOutCycleElemts);
     }
     public static void PerformTask2056()//Структуры данных. Самое популярное слово
     {
@@ -1296,8 +1290,6 @@ internal static class Tasks//что бы скормить задания сай�
     {
         int n = Convert.ToInt32(Console.ReadLine());
         Dictionary<int, int> numberCounter = new Dictionary<int, int>();
-        int minNumber = 2147483647;
-        numberCounter.Add(2147483647, 0);
         for (int i = 0; i < n; i++)
         {
             int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
@@ -1310,21 +1302,20 @@ internal static class Tasks//что бы скормить задания сай�
                 else
                 {
                     numberCounter.Add(data[1], 1);
-                    minNumber = minNumber > data[1] ? data[1] : minNumber;
+                    numberCounter = numberCounter.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
                 }
             }
             else
             {
-                if (numberCounter[minNumber] - 1 != 0)
+                if (numberCounter[numberCounter.Keys.ToArray()[0]] - 1 != 0)
                 {
-                    Console.WriteLine(minNumber);
-                    numberCounter[minNumber] -= 1;
+                    Console.WriteLine(numberCounter.Keys.ToArray()[0]);
+                    numberCounter[numberCounter.Keys.ToArray()[0]] -= 1;
                 }
                 else
                 {
-                    Console.WriteLine(minNumber);
-                    numberCounter.Remove(minNumber);
-                    minNumber = numberCounter.Keys.Min();
+                    Console.WriteLine(numberCounter.Keys.ToArray()[0]);
+                    numberCounter.Remove(numberCounter.Keys.ToArray()[0]);
                 }
             }
         }
@@ -1350,16 +1341,19 @@ internal static class Tasks//что бы скормить задания сай�
     {
         int n = Convert.ToInt32(Console.ReadLine());
         int[] startData = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        Dictionary<int, string> uniqueNumber = new Dictionary<int, string>();
         for (int i = 0; i < n; i++)
         {
-            int startValue = startData[i];
-            int tempMaxValue = 2147483647;
-            for (int j = 0; j <= i; j++)
+            var tempNumbers = uniqueNumber.Keys.Where(x => x > startData[i]);
+            if (uniqueNumber.ContainsKey(startData[i]))
             {
-                if (startData[j] > startValue && tempMaxValue >= startData[j])
-                    tempMaxValue = startData[j];
+                Console.Write((tempNumbers.Count() > 0 ? uniqueNumber.Keys.Where(x => x > startData[i]).Min() : -1) + " ");
             }
-            Console.Write((tempMaxValue == 2147483647 ? -1 : tempMaxValue) + " ");
+            else
+            {
+                Console.Write((tempNumbers.Count() > 0 ? uniqueNumber.Keys.Where(x => x > startData[i]).Min() : -1) + " ");
+                uniqueNumber.Add(startData[i], "");
+            }
         }
     }
     public static void PerformTask2060()//Структуры данных. Система учета оценок
@@ -1455,67 +1449,140 @@ internal static class Tasks//что бы скормить задания сай�
         foreach (Point point in tempPoints)
             Console.WriteLine(point.ToString());
     }
-    public static void PerformTask2063() { }
-    public static void PerformTask2064() { }
-    public static void PerformTask2065()//Рекурсия.Фрактал
-    {//белый - ложь, черный - истина
-        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
-        if (data[0] == 1)
+    public static void PerformTask2063()//Техника программирования. Игра Бум
+    {
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+        int t = data[1];
+        List<Player[]> teams = new List<Player[]>();
+        Dictionary<int, List<string>> teamPoint = new Dictionary<int, List<string>>();
+        for (int i = 0; i < data[0]; i++)
         {
-            bool[][] litleFacktal = { new bool[] { true, false }, new bool[] { true, true } };
-            if (litleFacktal[data[1] - 1][data[2] - 1])
-                Console.WriteLine("BLACK");
-            else
-                Console.WriteLine("WHITE");
-            return;
+            int[] teamdData = Array.ConvertAll(Console.ReadLine()?.Split()!, s => int.Parse(s));
+            Player[] team = new Player[] { new Player(teamdData[0], teamdData[1]), new Player(teamdData[2], teamdData[3]) };
+            teams.Add(team);
+            teamPoint.Add(i, new List<string>());
         }
-        int lenght = (int)Math.Pow(2, data[0] - 1);
-        bool[][] facktal = new bool[lenght][];
-        for (int i = 0; i < lenght; i++)
-            facktal[i] = new bool[lenght];
-        facktal[0][0] = true;
-        facktal[0][1] = false;
-        facktal[1][0] = true;
-        facktal[1][1] = true;
-        int presentDegree = 1;
-        while (true)
+        int m = Convert.ToInt32(Console.ReadLine());
+        Queue<Card> deck = new Queue<Card>();
+        for (int i = 1; i <= m; i++)
         {
-            if (data[0] - 1 == presentDegree)
-                break;
-            int smalSize = (int)Math.Pow(2, presentDegree);
-            for (int i = 0; i < smalSize; i++)
+            string word = Console.ReadLine()!;
+            int c = Convert.ToInt32(Console.ReadLine());
+            deck.Enqueue(new Card(word, c));
+        }
+        int playersCounter = 0;
+        int tempTime = t;
+        while (deck.Count > 0)
+        {
+            Card actionCard = deck.Dequeue();
+            Player[] team = teams[playersCounter];
+            int maveTime = Math.Max(1, actionCard.c - (team[0].a + team[1].b) - actionCard.GetExtraTime(playersCounter));
+            if (tempTime > maveTime)
             {
-                for (int j = 0; j < smalSize; j++)
+                teamPoint[playersCounter].Add(actionCard.word);
+                tempTime -= maveTime;
+            }
+            else if (tempTime == maveTime)
+            {
+                teamPoint[playersCounter].Add(actionCard.word);
+                tempTime = t;
+                playersCounter++;
+            }
+            else
+            {
+                actionCard.PutExtraTime(playersCounter, tempTime);
+                deck.Enqueue(actionCard);
+                tempTime = t;
+                playersCounter++;
+            }
+            if (playersCounter == data[0])
+            {
+                for (int i = 0; i < data[0]; i++)
                 {
-                    facktal[i + smalSize][j + smalSize] = facktal[i][j];
+                    teams[i] = Player.SwapPlayers(teams[i]);
                 }
+                playersCounter = 0;
             }
-            if ((presentDegree + 1) % 2 == 0)
+        }
+        foreach (var teamResult in teamPoint)
+        {
+            Console.Write(teamResult.Value.Count());
+            foreach (var playerResult in teamResult.Value)
+                Console.Write(" " + playerResult);
+            Console.WriteLine();
+        }
+    }
+    public static void PerformTask2064()//Техника программирования. Таблица
+    {
+        string[] columnsName = Console.ReadLine()!.Split();
+        string[] sortParams = Console.ReadLine()!.Split(',').Select(x => x.Trim()).ToArray();
+        List<string[]> table = new List<string[]>();
+        string tempLine = "Ну работай плиз";
+        do
+        {
+            tempLine = Console.ReadLine()!;
+            if (tempLine != null)
+                table.Add(tempLine.Split());
+        }
+        while (tempLine != null);
+        List<intBool> sortOrders = new List<intBool>();
+        foreach (string sortOrd in sortParams)
+        {
+            if (sortOrd.Contains(" DESC"))
             {
-                for (int i = 0; i < smalSize; i++)
-                    for (int j = 0; j < smalSize; j++)
-                        facktal[i][j + smalSize] = true;
+                sortOrders.Add(new intBool(Array.IndexOf(columnsName, new string(sortOrd.TakeWhile(x => x != ' ').ToArray())), false));
             }
-            presentDegree++;
-        }
-        if (data[1] <= lenght && data[2] > lenght)
-        {
-            if (data[0] % 2 == 0)
-                Console.WriteLine("BLACK");
             else
-                Console.WriteLine("WHITE");
+            {
+                sortOrders.Add(new intBool(Array.IndexOf(columnsName, new string(sortOrd.TakeWhile(x => x != ' ').ToArray())), true));
+            }
         }
-        else if (data[1] > lenght && data[2] <= lenght)
+        IOrderedEnumerable<string[]> tempTable = sortOrders[0].ascDesc ? table.OrderBy(x => x[sortOrders[0].index]) : table.OrderByDescending(x => x[sortOrders[0].index]);
+        for (int i = 1; i < sortOrders.Count(); i++)
         {
+            int index = sortOrders[i].index;
+            bool ascDesc = sortOrders[i].ascDesc;
+            tempTable = ascDesc ? tempTable.ThenBy(x => x[index]) : tempTable.ThenByDescending(x => x[index]);
+        }
+        table = tempTable.ToList();
+        foreach (var line in table)
+        {
+            foreach (var word in line)
+            {
+                Console.Write(word + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+    public static void PerformTask2065()//Рекурсия.Фрактал
+    {
+        int[] data = Array.ConvertAll(Console.ReadLine()?.Split()!, (s) => (int.Parse(s)));
+        while (data[0] != 1)
+        {
+            if (data[1] > (int)Math.Pow(2, data[0] - 1) && data[2] <= (int)Math.Pow(2, data[0] - 1))
+            {
+                Console.WriteLine("WHITE");
+                return;
+            }
+            else if (data[1] <= (int)Math.Pow(2, data[0] - 1) && data[2] > (int)Math.Pow(2, data[0] - 1))
+            {
+                Console.WriteLine(data[0] % 2 == 0 ? "BLACK" : "WHITE");
+                return;
+            }
+            else
+            {
+                if (data[1] > (int)Math.Pow(2, data[0] - 1) && data[2] > (int)Math.Pow(2, data[0] - 1))
+                {
+                    data[1] -= (int)Math.Pow(2, data[0] - 1);
+                    data[2] -= (int)Math.Pow(2, data[0] - 1);
+                }
+                data[0] -= 1;
+            }
+        }
+        if (data[1] == 1 && data[2] == 2)
             Console.WriteLine("WHITE");
-        }
         else
-        {
-            if (facktal[(data[1] > lenght ? data[1] - lenght : data[1]) - 1][(data[2] > lenght ? data[2] - lenght : data[2]) - 1])
-                Console.WriteLine("BLACK");
-            else
-                Console.WriteLine("WHITE");
-        }
+            Console.WriteLine("BLACK");
     }
     public static void PerformTask2066()//Рекурсия. Перемешивание массива
     {
@@ -1580,3 +1647,62 @@ struct Point : IComparable<Point>
         return x + " " + y;
     }
 }
+
+struct intBool
+{
+    public int index;
+    public bool ascDesc;
+    public intBool(int x, bool y)
+    {
+        index = x;
+        ascDesc = y;
+    }
+}
+
+struct Player
+{
+    public int a;
+    public int b;
+    public Player(int a, int b)
+    {
+        this.a = a;
+        this.b = b;
+    }
+    public Player(Player player)
+    {
+        this.a = player.a;
+        this.b = player.b;
+    }
+    public static Player[] SwapPlayers(Player[] team)
+    {
+        return new Player[] { new Player(team[1]), new Player(team[0]) };
+    }
+}
+
+struct Card
+{
+    public string word;
+    public int c;
+    public Dictionary<int, int> extraTime;
+    public Card(string word, int c)
+    {
+        this.word = word;
+        this.c = c;
+        extraTime = new Dictionary<int, int>();
+    }
+    public int GetExtraTime(int team)
+    {
+        if (extraTime.ContainsKey(team))
+            return extraTime[team];
+        else
+            return 0;
+    }
+    public void PutExtraTime(int team, int time)
+    {
+        if (extraTime.ContainsKey(team))
+            extraTime[team] += time;
+        else
+            extraTime.Add(team, time);
+    }
+}
+
